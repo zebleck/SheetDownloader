@@ -1,5 +1,5 @@
 # SheetDownloader
-Wilkommen. Dieses Programm wird für dich Skripte und Übungsblätter
+Dieses Programm wird für dich Skripte und Übungsblätter
 für Theoretische Physik 1, Experimentalphysik 1 und Lineare Algebra 1
 herunterladen.
 
