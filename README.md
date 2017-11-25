@@ -8,6 +8,8 @@ werden dafür offensichtlich benötigt. Diese Daten werden im
 Ordner, in dem sich dieses Programm befindet, gespeichert,
 um zukünftig schnell darauf zugreifen zu können (mehr nicht).
 
+Der komplette Code ist in den beiden Datein SheetDownloader.py und downloader.py zu finden.
+
 **Download: https://github.com/zebleck/SheetDownloader/raw/master/SheetDownloader.rar**
 
 [Übungsgruppenverwaltung](https://uebungen.physik.uni-heidelberg.de/uebungen/)  
