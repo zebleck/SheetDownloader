@@ -1,7 +1,7 @@
 # SheetDownloader
-Dieses Programm wird für dich Skripte und Übungsblätter
+Dieses Programm wird dir Skripte und Übungsblätter
 für Theoretische Physik 1, Experimentalphysik 1 und Lineare Algebra 1
-herunterladen.
+runterladen.
 
 Benutzername und Passwort der Übungsgruppenverwaltung/Moodle
 werden dafür offensichtlich benötigt. Diese Daten werden im
