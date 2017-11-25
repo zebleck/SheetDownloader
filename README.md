@@ -8,6 +8,5 @@ werden dafür offensichtlich benötigt. Diese Daten werden im
 Ordner, in dem sich dieses Programm befindet, gespeichert,
 um zukünftig schnell darauf zugreifen zu können (mehr nicht).
 
-[Übungsgruppenverwaltung](https://uebungen.physik.uni-heidelberg.de/uebungen/)
-
+[Übungsgruppenverwaltung](https://uebungen.physik.uni-heidelberg.de/uebungen/)  
 [Moodle](https://elearning2.uni-heidelberg.de/\n)
