@@ -8,5 +8,7 @@ werden dafür offensichtlich benötigt. Diese Daten werden im
 Ordner, in dem sich dieses Programm befindet, gespeichert,
 um zukünftig schnell darauf zugreifen zu können (mehr nicht).
 
+**Download: https://github.com/zebleck/SheetDownloader/raw/master/SheetDownloader.rar**
+
 [Übungsgruppenverwaltung](https://uebungen.physik.uni-heidelberg.de/uebungen/)  
 [Moodle](https://elearning2.uni-heidelberg.de/)
