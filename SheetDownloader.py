@@ -1,66 +1,43 @@
 from downloader import Downloader
+from inputter import Inputter
 import requests
 import getpass
 import os.path
 import tkinter as tk
 from tkinter import filedialog
 
-root = tk.Tk()
-root.withdraw()
+name = Inputter().GetInput()
 
-name = input("Dein Name: ")
-
-if not(os.path.isfile(name + ".txt")):
-    print("""Wilkommen. Dieses Programm wird für dich Skripte und Übungsblätter
-für Theoretische Physik 1, Experimentalphysik 1 und Lineare Algebra 1
-herunterladen.
-
-Benutzername und Passwort der Übungsgruppenverwaltung/Moodle
-werden dafür offensichtlich benötigt. Diese Daten werden in %s.txt
-im Ordner dieses Programms gespeichert, um zukünftig schnell
-darauf zugreifen zu können (mehr nicht).
-
-Übungsgruppenverwaltung: https://uebungen.physik.uni-heidelberg.de/uebungen/
-Moodle: https://elearning2.uni-heidelberg.de/\n""" % (name))
-    f = open(name + ".txt", 'w')
-    f.write(input("Übungsgruppenverwaltung-Benutzername: ") + "\n")
-    f.write(getpass.getpass("Übungsgruppenverwaltung-Passwort: ") + "\n")
-    f.write(input("Moodle-Benutzername: ") + "\n")
-    f.write(getpass.getpass("Moodle-Passwort: ") + "\n")
-
-    dirPrompts = ['Theo1 Übungsblätter',
-                  'Ex1 Skripte', 'Ex1 Übungsblätter', 'Alles andere bezüglich Ex1',
-                  'La1 Skripte', 'La1 Übungsblätter', 'Alles andere bezüglich La1']
-    
-    print("Wähle den Ordner für:")
-    for prompt in dirPrompts:
-        print("-" + prompt)
-        f.write(filedialog.askdirectory(title=prompt) + "\n")
-    f.close()
-
-theo1Paths = {"sheets": None}
-ex1Paths = {"scripts": None, "sheets": None, "misc": None}
-la1Paths = {"scripts": None, "sheets": None, "misc": None}
+ex1Id =16267
+la1Id = 15818
+ana1Id = 16107
+theo1Paths = None
+ex1Paths = None
+la1Paths = None
+ana1Paths = None
 
 f = open(name + ".txt", "r")
 lines = f.read().splitlines()
 f.close()
 
+doesAna = (lines[4] == "y")
+
 ügPayload = {'username': lines[0], 'loginpass': lines[1]}
 moodlePayload = {'username': lines[2], 'password': lines[3]}
-theo1Paths['sheets'] = lines[4]
-ex1Paths['scripts'] = lines[5]
-ex1Paths['sheets'] = lines[6]
-ex1Paths['misc'] = lines[7]
-la1Paths['scripts'] = lines[8]
-la1Paths['sheets'] = lines[9]
-la1Paths['misc'] = lines[10]
+theo1Paths = {"scripts": None, "sheets": lines[5], "misc": None}
+ex1Paths = {"scripts": lines[6], "sheets": lines[7], "misc": lines[8]}
+la1Paths = {"scripts": lines[9], "sheets": lines[10], "misc": lines[11]}
+if(doesAna):
+    ana1Paths = {"scripts": lines[12], "sheets": lines[13], "misc": lines[14]}
 
 s = requests.Session()
-dl = Downloader(s, ügPayload, moodlePayload, theo1Paths, ex1Paths, la1Paths)
+dl = Downloader(s, ügPayload, moodlePayload)
 
 print("Check beginnt.")
-dl.getTheo1()
-dl.getEx1()
-dl.getLa1()
+dl.getTheo1(theo1Paths)
+dl.getMoodle("Ex1", ex1Id, ex1Paths, "Vorlesung", "Blatt")
+dl.getMoodle("La1", la1Id, la1Paths, "VL", "Übungsblatt")
+if doesAna:
+    dl.getMoodle("Ana1", ana1Id, ana1Paths, "Vorlesung", "Blatt")
 print("Check beendet.")
+input("Drücke ENTER Taste zum Beenden ...")

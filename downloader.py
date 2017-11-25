@@ -6,13 +6,10 @@ import re
 
 class Downloader:
 
-    def __init__(self, session, ügPayload, moodlePayload, theo1Paths, ex1Paths, la1Paths):
+    def __init__(self, session, ügPayload, moodlePayload):
         self.s = session
         self.ügPayload = ügPayload
         self.moodlePayload = moodlePayload
-        self.theo1Paths = theo1Paths
-        self.ex1Paths = ex1Paths
-        self.la1Paths = la1Paths
 
     def download_pdf(self, download_url, path, name):
         name = name.replace(".", " ").replace(":", " ")
@@ -31,12 +28,12 @@ class Downloader:
         file.close()
         print("Runtergeladen " + name)
 
-    def getTheo1(self):
+    def getTheo1(self, theo1Paths):
         print("Checke Theo1")
         
         loginurl = "http://uebungen.physik.uni-heidelberg.de/uebungen/login.php"
         loginpayload = self.ügPayload
-        path = self.theo1Paths['sheets']
+        path = theo1Paths['sheets']
         base = 'https://uebungen.physik.uni-heidelberg.de'
         url = 'https://uebungen.physik.uni-heidelberg.de/uebungen/liste.php?vorl=806'
 
@@ -47,15 +44,15 @@ class Downloader:
         for link in links:
             self.download_pdf(base + link.get("href"), path, link.text)
 
-    def getEx1(self):
-        print("Checke Ex1")
+    def getMoodle(self, name, id, paths, scriptDesc, sheetDesc):
+        print("Checke %s" % (name))
         
         loginurl = 'https://elearning2.uni-heidelberg.de/login/index.php'
         loginpayload = self.moodlePayload
-        url = 'https://elearning2.uni-heidelberg.de/course/view.php?id=16267'
-        scriptPath = self.ex1Paths['scripts']
-        excercisePath = self.ex1Paths['sheets']
-        miscPath = self.ex1Paths['misc']
+        url = 'https://elearning2.uni-heidelberg.de/course/view.php?id=%s' % (id)
+        scriptPath = paths['scripts']
+        excercisePath = paths['sheets']
+        miscPath = paths['misc']
 
         self.s.post(loginurl, loginpayload)
 
@@ -70,39 +67,9 @@ class Downloader:
                 if(text.endswith(" Datei")):
                    text = text[:-6]
                 r = self.s.get(part.find("a").get("href"))
-                if(text.startswith("Vorlesung")):
+                if(text.startswith(scriptDesc)):
                     self.download_pdf(r.url, scriptPath, text)
-                elif(text.startswith("Blatt")):
-                    self.download_pdf(r.url, excercisePath, text)
-                else:
-                    self.download_pdf(r.url, miscPath, text)
-
-    def getLa1(self):
-        print("Checke La1")
-        
-        loginurl = 'https://elearning2.uni-heidelberg.de/login/index.php'
-        loginpayload = self.moodlePayload
-        url = 'https://elearning2.uni-heidelberg.de/course/view.php?id=15818'
-        scriptPath = self.la1Paths['scripts']
-        excercisePath = self.la1Paths['sheets']
-        miscPath = self.la1Paths['misc']
-
-        self.s.post(loginurl, loginpayload)
-
-        weeks = BeautifulSoup(self.s.get(url).content, "html.parser").find("ul", {"class": "weeks"}).findAll("div", {"class": "content"})
-        weeks.pop(0)
-        
-        for section in weeks:
-            for part in section.findAll("li", {"class": "activity resource modtype_resource "}):
-                text = part.find("span", {"class": "instancename"}).text
-                if(text == ""):
-                    break
-                if(text.endswith(" Datei")):
-                   text = text[:-6]
-                r = self.s.get(part.find("a").get("href"))
-                if(text.startswith("VL")):
-                    self.download_pdf(r.url, scriptPath, text)
-                elif(text.startswith("Übungsblatt")):
+                elif(text.startswith(sheetDesc)):
                     self.download_pdf(r.url, excercisePath, text)
                 else:
                     self.download_pdf(r.url, miscPath, text)
